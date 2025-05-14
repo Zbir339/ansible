@@ -5,6 +5,7 @@ services:
     container_name: ansible
     volumes:
       - ./master/hosts:/home/ansible/hosts
+      - ./master/playbooks:/home/ansible/playbooks
     networks:
       networkmain:
         ipv4_address: 172.35.0.10

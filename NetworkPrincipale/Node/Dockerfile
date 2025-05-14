@@ -12,11 +12,13 @@ RUN apt-get update && \
 
 ## We create a user and give it sudo properties with no pass
 RUN useradd -m ansible && \
+    echo "ansible:test" | chpasswd && \
     echo "ansible ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER ansible
 WORKDIR /home/ansible
 ## we generate the ssh key (we'll publish it after words)
 RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa
+
 
 CMD ["sleep", "infinity"]
