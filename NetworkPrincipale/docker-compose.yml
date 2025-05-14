@@ -7,7 +7,7 @@ services:
       - ./master/hosts:/home/ansible/hosts
     networks:
       networkmain:
-        ipv4_address: 172.35.0.1
+        ipv4_address: 172.35.0.10
   
   serveur1:
     build:
@@ -15,7 +15,7 @@ services:
     container_name: serveur1
     networks:
       networkmain:
-        ipv4_address: 172.35.0.2
+        ipv4_address: 172.35.0.11
 
 
       

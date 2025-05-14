@@ -18,3 +18,5 @@ USER ansible
 WORKDIR /home/ansible
 ## we generate the ssh key (we'll publish it after words)
 RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa
+
+CMD ["sleep", "infinity"]
