@@ -10,15 +10,30 @@ services:
       networkmain:
         ipv4_address: 172.35.0.10
   
-  serveur1:
+# group network I
+  serveur1: 
     build:
       context: ./node
     container_name: serveur1
     networks:
       networkmain:
         ipv4_address: 172.35.0.11
+  serveur2:
+    build:
+      context: ./node
+    container_name: serveur2
+    networks:
+      networkmain:
+        ipv4_address: 172.35.0.12
+  serveur3:
+    build:
+      context: ./node
+    container_name: serveur3
+    networks:
+      networkmain:
+        ipv4_address: 172.35.0.13
 
-
+#Network II
       
 networks:
   networkmain:
@@ -26,3 +41,8 @@ networks:
     ipam:
       config:
         - subnet: 172.35.0.0/24
+  networksecondary:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.100.0.0/24

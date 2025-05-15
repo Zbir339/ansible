@@ -1,0 +1,15 @@
+---
+- name: Configure nginx web server
+  become: true
+  hosts: server-web
+  tasks:
+    - name: install nginx server
+    ## apt install nginx
+      apt:
+        ## ressource a installer
+        name: nginx=1.18*
+        ## version de cette ressource
+        state: present
+    - name: start nginx server
+      ## service nginx start
+      shell: service nginx start
