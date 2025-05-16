@@ -1,0 +1,3 @@
+destination: /home/ansible
+location: /home/ansible/playbooks/hello-node-app.tar.gz
+app_path: /home/ansible/hello-node-app/

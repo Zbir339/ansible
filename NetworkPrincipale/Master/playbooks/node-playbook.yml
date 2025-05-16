@@ -10,9 +10,16 @@
         pkg:
           - nodejs
           - npm
+
 - name: Deploy nodejs app
   become: true 
   hosts: databases
+  # vars:
+  #   - destination: /home/ansible
+  #   - location: /home/ansible/playbooks/hello-node-app.tar.gz
+  #   - app_path: /home/ansible/hello-node-app/
+  vars_files: 
+    - vars/node-vars.yml
   tasks:
     #- name: Copy the tar app file
       # copy: 
@@ -20,18 +27,18 @@
       #   dest: /home/ansible/app.tar.gz 
     - name: Copy and Unpack the nodejs tar file
       unarchive:
-        src: /home/ansible/playbooks/hello-node-app.tar.gz 
+        src: "{{location}}"
         # in here we should not put a folder that does not exist
-        dest: /home/ansible
+        dest: "{{destination}}"
         # if this is not specified then ansible will copy locally and 
         # remote_src: yes
     - name: Install Dependencies
       npm:
-        path: /home/ansible/hello-node-app/
+        path: "{{app_path}}"
     - name: Start the application
     # this command blocks shell since node is not ran in the background
       command:
-        chdir: /home/ansible/hello-node-app/
+        chdir: "{{app_path}}"
         cmd: node index.js
     # to do so we add async and poll to do something like node index.js &
       async: 1000
