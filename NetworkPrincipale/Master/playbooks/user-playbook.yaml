@@ -1,0 +1,46 @@
+---
+- name: Learning ansible 
+  become: true
+  hosts: 172.35.0.12
+  tasks:
+    - name: Create groupe zabbix
+      group:
+        name: zabbix
+
+    - name: Create user zabbix
+      user:
+        name: zabbix
+        group: zabbix
+
+    - name: Make user zabbix owner of a folder zabbix
+      file:
+        path: /home/ansible/zabbix
+        state: directory
+        owner: zabbix
+        group: zabbix
+        recurse: yes
+
+    - name: Create a config file
+      #become_user: zabbix
+      file:
+        path: /home/ansible/zabbix/zabbix.conf
+        state: touch
+
+- name: Add zabbix agent configs
+  hosts: 172.35.0.12
+  become: true
+  tasks:
+    - name: Set zabbix main 4 configs (server,active,metadata)
+    # this gives us the posibility of adding new line
+      blockinfile:
+        path: /home/ansible/zabbix/zabbix.conf
+        block: |
+          server=172.0.0.1
+          serverActive=s3-pxyzbx.com
+          metadata=bonjour=lemonde
+    -  
+      
+
+
+      
+

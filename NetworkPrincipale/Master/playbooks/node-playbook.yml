@@ -44,7 +44,7 @@
       async: 1000
       poll: 0
     - name: Checking App is running
-    # not that shell are NOT SECURED command is more secure
+    # note   that shell are NOT SECURED command is more secure
     # and to check if an app is running we can curl into a health endpoint to see if it's running or not
       shell: ps aux | grep node
     # creating a variable to save results  
@@ -52,5 +52,25 @@
     # note that the result is a dictionary that contains multiple key we get to choose the one that
     # gives back the needs  
     - debug: msg={{status.stdout_lines}}
+    # we can use the find module to find directories app etc dynamically instead of hardcoding the names
+    - name: Find folder app 
+      find:
+        paths: /home/ansible
+        pattern: "hello-node-*"
+        file_type: directory
+      register: find_result
+    - debug: msg={{find_result}}
 
+    - name: Check if node-app folder exists
+      stat:
+        path: /home/ansible/node-app
+      register: stat_result
+    - debug: msg={{stat_result}}
+    # the shell and commande ansible run them everysingle time unlike modules in wich ansible have it's own way to
+    # determine weither this was already launched or not
+    # we then use conditionals 
+    - name: Rename node app folder
+      shell: mv {{find_result.files[0].path}} /home/ansible/node-app
+      when: not stat_result.stat.exists
+ 
 
