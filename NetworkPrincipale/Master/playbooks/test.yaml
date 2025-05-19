@@ -1,0 +1,20 @@
+---
+- name: configuring ssh keys
+  become: true
+  hosts: all
+  gather_facts: no
+  vars_files: 
+    - vars/ssh-pubkey.yml
+  tasks:
+    - name: create authorized keys
+      file:
+        path: /home/ansible/.ssh/authorized_keys
+        state: touch
+        mode: '0600'
+        owner: ansible
+    
+    - name: create copy ssh public keys
+      blockinfile:
+        path: /home/ansible/.ssh/authorized_keys
+        block: |
+          {{sshkey}}

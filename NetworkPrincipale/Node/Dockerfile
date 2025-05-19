@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-## We first install dependecies in need
+# Installer les paquets nécessaires
 RUN apt-get update && \
     apt-get install -y \
         openssh-server \
@@ -10,15 +10,22 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-## We create a user and give it sudo properties with no pass
+# Créer l'utilisateur ansible avec droits sudo sans mot de passe
 RUN useradd -m ansible && \
     echo "ansible:test" | chpasswd && \
     echo "ansible ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+# Configurer SSH pour root (à faire avant de changer d'utilisateur)
+RUN mkdir -p /var/run/sshd && \
+    mkdir -p /home/ansible/.ssh && \
+    chmod 700 /home/ansible/.ssh && \
+    chown ansible:ansible /home/ansible/.ssh
+
+# Exposer le port SSH
+EXPOSE 22
+
 USER ansible
 WORKDIR /home/ansible
-## we generate the ssh key (we'll publish it after words)
-RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa
 
-
-CMD ["sleep", "infinity"]
+# Démarrer sshd en root
+CMD ["sudo","/usr/sbin/sshd", "-D"]

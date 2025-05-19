@@ -1,6 +1,6 @@
 # Ansible automating tasks for multiple instances
 
-## 1- SSH CONFIGURATION
+## 1- SSH CONFIGURATION (Manuel)
 - Start the **ssh** serive
 > **CMD : service ssh start** 
 
@@ -15,4 +15,10 @@
 > **CMD: source /venv/bin/activate**
 
 > **CMD: pip install ansible**
-## 2- Ansible Configuration
+## 1.1- AUTOMATED CONFIGURATION 
+- Since in docker the **ssh** service is ran at the creation of the container we'll use the ansible playbook we made to copy the ssh key and secure it
+> **CMD: ansible-playbook -i hosts/hosts.ini playbooks/test.yaml --ask-pass**
+- In here I am asking the password for the first time so I can use the ssh key generated afterward
+> **CMD: ansible all -i hosts/hosts.ini -m ping**
+- with this commande we check if our ssh key is ready to be used 
+ 

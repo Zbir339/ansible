@@ -1,6 +1,5 @@
 FROM ubuntu:22.04
 
-## We first install dependecies in need
 RUN apt-get update && \
     apt-get install -y \
         openssh-server \
@@ -10,13 +9,29 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-## We create a user and give it sudo properties with no pass
 RUN useradd -m ansible && \
     echo "ansible ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-USER ansible
-WORKDIR /home/ansible
-## we generate the ssh key (we'll publish it after words)
-RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa
+RUN apt-get update && \
+    apt-get install -y python3-virtualenv
 
-CMD ["sleep", "infinity"]
+RUN mkdir -p /home/ansible/.ssh && \
+    chown ansible:ansible /home/ansible/.ssh && \
+    chmod 700 /home/ansible/.ssh
+
+RUN ssh-keygen -t rsa -f /home/ansible/.ssh/id_rsa -N "" && \
+    chown ansible:ansible /home/ansible/.ssh/id_rsa*
+
+RUN mkdir -p /run/sshd
+
+WORKDIR /home/ansible
+RUN virtualenv -p python3.10 venv
+RUN venv/bin/pip install ansible
+
+USER ansible
+
+
+
+EXPOSE 22
+
+CMD ["sudo", "/usr/sbin/sshd", "-D"]
