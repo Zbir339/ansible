@@ -1,0 +1,10 @@
+We'll be adding the host in the known hosts file so we can 
+ssh the first time via pass
+
+[ansible:server]
+ssh-keyscan -H 172.35.0.11 >> ~/.ssh/known_hosts
+ssh-keyscan -H 172.35.0.12 >> ~/.ssh/known_hosts
+ssh-keyscan -H 172.35.0.13 >> ~/.ssh/known_hosts
+ssh-keyscan -H 172.35.0.14 >> ~/.ssh/known_hosts
+[bastion]
+

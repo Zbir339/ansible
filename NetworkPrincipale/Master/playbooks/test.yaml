@@ -1,7 +1,7 @@
 ---
 - name: configuring ssh keys
   become: true
-  hosts: all
+  hosts: server_web_netw2
   gather_facts: no
   vars_files: 
     - vars/ssh-pubkey.yml

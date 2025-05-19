@@ -32,9 +32,28 @@ services:
     networks:
       networkmain:
         ipv4_address: 172.35.0.13
-
+              
 #Network II
-      
+  bastion:
+    build:
+      context: ./node
+    container_name: bastion
+    networks:
+      networkmain:
+        ipv4_address: 172.35.0.14
+      networksecondary:
+        ipv4_address: 10.100.0.3
+
+  serveur4:
+    build:
+      context: ./node
+    container_name: serveur4
+    networks:
+      networksecondary:
+        ipv4_address: 10.100.0.4
+
+### Network
+
 networks:
   networkmain:
     driver: bridge
