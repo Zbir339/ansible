@@ -1,17 +1,24 @@
 ---
 - name: configuring ssh keys
   become: true
-  hosts: server_web_netw2
+  hosts: databases
   gather_facts: no
   vars_files: 
     - vars/ssh-pubkey.yml
   tasks:
+    - name: checking folder existance
+      stat:
+        path: /home/ansible/.ssh/authorized_keys
+      register: authorized_keys_state
+
+    
     - name: create authorized keys
       file:
         path: /home/ansible/.ssh/authorized_keys
         state: touch
         mode: '0600'
         owner: ansible
+      when: not authorized_keys_state.stat.exists
     
     - name: create copy ssh public keys
       blockinfile:

@@ -6,6 +6,7 @@ RUN apt-get update && \
         openssh-server \
         python3 \
         python3-pip \
+        systemctl \
         sudo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

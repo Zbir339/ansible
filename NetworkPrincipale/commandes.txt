@@ -5,6 +5,10 @@ ssh the first time via pass
 ssh-keyscan -H 172.35.0.11 >> ~/.ssh/known_hosts
 ssh-keyscan -H 172.35.0.12 >> ~/.ssh/known_hosts
 ssh-keyscan -H 172.35.0.13 >> ~/.ssh/known_hosts
-ssh-keyscan -H 172.35.0.14 >> ~/.ssh/known_hosts
-[bastion]
 
+[bastion]
+ssh-keyscan -H 172.35.0.14 >> ~/.ssh/known_hosts
+
+For the seconde network we'll bypass the known_hosts using the proxy uncomment this line in the host.inis
+
+#ansible_ssh_common_args='-o ProxyJump=ansible@172.35.0.14 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'

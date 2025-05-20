@@ -16,9 +16,14 @@
 
 > **CMD: pip install ansible**
 ## 1.1- AUTOMATED CONFIGURATION 
-- Since in docker the **ssh** service is ran at the creation of the container we'll use the ansible playbook we made to copy the ssh key and secure it
+- Since in docker the **ssh** service is ran at the creation of the container we'll use the ansible playbook we made to copy the ssh key and secure it.
+> **!! BEFORE make sure to add the servers near the ansible server as known_hosts check the commandes.txt**
+
 > **CMD: ansible-playbook -i hosts/hosts.ini playbooks/test.yaml --ask-pass**
 - In here I am asking the password for the first time so I can use the ssh key generated afterward
+- Make sure to do this for all the types **individually** (server_web,databases)
+- For the seconde network check yet again the **commandes.txt**
 > **CMD: ansible all -i hosts/hosts.ini -m ping**
-- with this commande we check if our ssh key is ready to be used 
- 
+- With this commande we check if our ssh key is ready to be used 
+- OK once done and checked we can go ahead and launch the zabbix playbook 
+> **CMD: ansible-playbook -i hosts/hosts.ini playbooks/zabbix-playbook.yaml**

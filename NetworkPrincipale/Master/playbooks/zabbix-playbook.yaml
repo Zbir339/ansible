@@ -1,0 +1,84 @@
+---
+- name: Get zabbix Agent
+  hosts: all
+  become: true
+  tasks:
+    - name: Download zabbix agent 2
+      get_url:
+        url: https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest_7.0+ubuntu22.04_all.deb
+        dest: /tmp/
+    
+    - stat:
+        path: /etc/apt/sources.list.d/zabbix-tools.list
+      register: zabbix_tools
+
+    #- debug: msg={{zabbix_tools}}
+
+    - name: Install a local .deb package
+      command: 
+        chdir: /tmp/
+        cmd: dpkg -i zabbix-release_latest_7.0+ubuntu22.04_all.deb
+      when: not zabbix_tools.stat.exists
+    
+    - name: Update apt repo and cache
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+- name: Install Zabbix Agent 2 and configure
+  hosts: all
+  become: true
+  tasks: 
+    - name: Install Zabbix Agent 2
+      apt:
+        pkg:
+          - zabbix-agent2
+    
+    - name: Install Zabbix agent plugins
+      apt:
+        pkg:
+          - zabbix-agent2-plugin-mongodb
+          - zabbix-agent2-plugin-mssql
+          - zabbix-agent2-plugin-postgresql
+    
+    - name: Check the first line in zabbix_config
+      command:
+        chdir: /etc/zabbix/
+        cmd: head -n 1 zabbix_agent2.conf
+      register: first_line
+
+    #- debug: msg={{first_line}}
+
+    - name: Empty the file if the first line doesen't contain the key word
+      copy: 
+        dest: /etc/zabbix/zabbix_agent2.conf
+        content: |
+          #ansible
+          Server=17.0.0.1
+          ServerActive=192.168.1.100
+          HostnameItem=system.hostname
+          LogFile=/var/log/zabbix/zabbix_agent2.log
+          PidFile=/run/zabbix/zabbix_agent2.pid
+          Include=/etc/zabbix/zabbix_agent2.d/*.conf
+          Metadata=sys=linux
+      when: "not '#ansible' in first_line.stdout"
+
+- name: Run Zabbix Agent and check status
+  hosts: all
+  become: true
+  tasks:
+    ## we can use the service module but since I am on ubuntu mini image I'll use service
+    - name: Run zabbix
+      service:
+        name: zabbix-agent2
+        state: restarted
+    
+    - name: enable zabbix
+      service:
+        name: zabbix-agent2
+        enabled: yes
+
+    - name: Check status
+      shell: ps aux | grep zabbix-agent2
+      register: status
+    
+    - debug: msg={{status}}
+
