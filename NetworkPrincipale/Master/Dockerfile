@@ -4,6 +4,7 @@ RUN apt-get update && \
     apt-get install -y \
         openssh-server \
         python3 \
+        sshpass\
         python3-pip \
         sudo && \
     apt-get clean && \
