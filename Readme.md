@@ -19,7 +19,7 @@
 - Since in docker the **ssh** service is ran at the creation of the container we'll use the ansible playbook we made to copy the ssh key and secure it.
 > **!! BEFORE make sure to add the servers near the ansible server as known_hosts check the commandes.txt**
 
-> **CMD: ansible-playbook -i hosts/hosts.ini playbooks/test.yaml --ask-pass**
+> **CMD: ansible-playbook -i hosts/hosts.ini playbooks/sshkey-copy-playbook.yaml --ask-pass**
 - In here I am asking the password for the first time so I can use the ssh key generated afterward
 - Make sure to do this for all the types **individually** (server_web,databases)
 - For the seconde network check yet again the **commandes.txt**
